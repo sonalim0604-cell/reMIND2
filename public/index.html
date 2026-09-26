@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Patient details</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/registration.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/index.html" aria-label="reMIND registration">reMIND</a></header>
+  <main class="page-shell">
+    <section class="content-panel" aria-labelledby="page-title">
+      <nav class="step-navigation" aria-label="Registration progress"><span class="step-current">Step 1 of 4</span><span>Patient details</span></nav>
+      <h1 id="page-title">Let's get to know you</h1>
+      <p class="lead">First, a few details about the person who will use reMIND.</p>
+      <form id="patient-form" novalidate>
+        <div class="form-grid">
+          <div class="field field-wide">
+            <label for="patient-name">Full name</label>
+            <input id="patient-name" name="fullName" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="date-of-birth">Date of birth</label>
+            <input id="date-of-birth" name="dateOfBirth" type="date" autocomplete="bday" required>
+          </div>
+          <div class="field">
+            <label for="patient-age">Age <span class="label-note">(editable)</span></label>
+            <input id="patient-age" name="age" type="number" min="0" max="125" inputmode="numeric" required>
+          </div>
+          <div class="field field-wide">
+            <label for="patient-country-code">Contact number</label>
+            <div class="phone-fields">
+              <select id="patient-country-code" name="countryCode" aria-label="Contact country code">
+                <option value="+91" selected>India (+91)</option>
+                <option value="+44">United Kingdom (+44)</option>
+                <option value="+1">United States (+1)</option>
+              </select>
+              <input id="patient-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" pattern="[0-9]{4,15}" maxlength="15" placeholder="Phone number" aria-label="Contact number digits" required>
+            </div>
+          </div>
+        </div>
+
+        <fieldset class="address-fields">
+          <legend>Address</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="address-country">Country</label>
+              <select id="address-country" name="addressCountry">
+                <option value="India" selected>India</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="address-region">State or region</label>
+              <select id="address-region" name="addressRegion" required></select>
+            </div>
+            <div class="field field-wide">
+              <label for="address-details">Detailed address</label>
+              <textarea id="address-details" name="addressDetails" rows="3" autocomplete="street-address" placeholder="House number, street, area, and postal code"></textarea>
+            </div>
+          </div>
+        </fieldset>
+        <div class="form-actions">
+          <button class="button button-primary" type="submit">Save &amp; next</button>
+        </div>
+      </form>
+    </section>
+    <p class="privacy-note">Your details are kept in this registration session.</p>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

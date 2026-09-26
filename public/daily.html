@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Daily routine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/voice-playback.js"></script>
+  <script defer src="/js/trainer-engine.js"></script>
+  <script defer src="/js/daily.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <h1>Your daily routine</h1>
+    <p class="lead">Take one step at a time. You can switch to another part of the day whenever you like.</p>
+    <div class="period-switcher" role="group" aria-label="Choose time of day">
+      <button class="button button-secondary" type="button" data-period="morning" aria-pressed="true">Morning</button>
+      <button class="button button-secondary" type="button" data-period="afternoon" aria-pressed="false">Afternoon</button>
+      <button class="button button-secondary" type="button" data-period="night" aria-pressed="false">Night</button>
+    </div>
+    <section class="app-section" aria-live="polite">
+      <div class="daily-layout">
+        <div class="daily-photo-tile" aria-label="Routine photo placeholder"><span class="daily-photo-icon" id="daily-photo-icon"></span></div>
+        <div class="daily-step-content">
+          <p class="eyebrow" id="step-counter"></p>
+          <button class="button button-secondary button-icon" id="play-voice-cue" type="button"></button>
+          <div class="recall-question" id="recall-question">
+            <h2>What comes next?</h2>
+            <div class="answer-grid" id="answer-grid"></div>
+            <p class="answer-feedback" id="answer-feedback" aria-live="polite"></p>
+          </div>
+          <div class="progress-dots" id="progress-dots" aria-label="Routine progress"></div>
+        </div>
+      </div>
+      <div class="engine-summary" id="trainer-status" aria-live="polite"></div>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Caretaker details</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/caretaker.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/index.html" aria-label="reMIND registration">reMIND</a></header>
+  <main class="page-shell">
+    <section class="content-panel" aria-labelledby="page-title">
+      <nav class="step-navigation" aria-label="Registration progress"><a class="step-back" href="/index.html">Back</a><span class="step-current">Step 2 of 4</span><span>Caretaker details</span></nav>
+      <h1 id="page-title">Who is here to help?</h1>
+      <p class="lead">Add a trusted person who can support the daily routine.</p>
+      <form id="caretaker-form" novalidate>
+        <div class="form-grid">
+          <div class="field field-wide">
+            <label for="caretaker-name">Caretaker or family member's name</label>
+            <input id="caretaker-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field field-wide">
+            <label for="caretaker-country-code">Contact number</label>
+            <div class="phone-fields">
+              <select id="caretaker-country-code" name="countryCode" aria-label="Contact country code">
+                <option value="+91" selected>India (+91)</option>
+                <option value="+44">United Kingdom (+44)</option>
+                <option value="+1">United States (+1)</option>
+              </select>
+              <input id="caretaker-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" pattern="[0-9]{4,15}" maxlength="15" placeholder="Phone number" aria-label="Contact number digits" required>
+            </div>
+          </div>
+          <div class="field field-wide">
+            <label for="caretaker-relation">Relationship to the patient</label>
+            <input id="caretaker-relation" name="relation" type="text" placeholder="For example, daughter, friend, or neighbour" required>
+          </div>
+        </div>
+        <section class="consent-section" aria-labelledby="consent-title">
+          <h2 id="consent-title">Do you want to include your close one's audio?</h2>
+          <p class="field-help">You can decide whether to include a familiar voice in reMIND.</p>
+          <div class="choice-buttons">
+            <button class="button button-choice button-yes" type="button" data-consent="yes">Yes</button>
+            <button class="button button-choice button-no" type="button" data-consent="no">No</button>
+          </div>
+        </section>
+      </form>
+      <section class="content-panel nickname-panel" id="nickname-slide" aria-labelledby="nickname-title" hidden>
+        <p class="eyebrow">One more thing</p>
+        <h2 id="nickname-title">What should we call them?</h2>
+        <p class="lead" id="nickname-prompt">Choose a familiar name that feels comfortable.</p>
+        <form id="nickname-form">
+          <div class="field">
+            <label for="audio-nickname">Name to use</label>
+            <input id="audio-nickname" name="nickname" type="text" autocomplete="off" placeholder="For example, Mum or Arun">
+          </div>
+          <div class="form-actions">
+            <button class="button button-primary" type="submit">Save &amp; next</button>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

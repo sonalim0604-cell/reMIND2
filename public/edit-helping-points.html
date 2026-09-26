@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Edit helping points</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/edit-helping-points.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <h1>Edit helping points</h1>
+    <p class="lead">Choose the reminders that help, then add or update their notes.</p>
+    <form id="edit-helping-points-form" class="form-stack">
+      <section class="app-section" aria-labelledby="topics-heading">
+        <div class="section-heading"><h2 id="topics-heading">Helping points</h2></div>
+        <div class="topic-grid-edit" id="topic-grid" aria-label="Helping point options"></div>
+      </section>
+      <section class="app-section" aria-labelledby="notes-heading">
+        <div class="section-heading"><h2 id="notes-heading">Details</h2><p>Notes are optional and only appear for selected helping points.</p></div>
+        <div class="topic-note-list" id="topic-note-list"></div>
+      </section>
+      <div class="form-actions form-actions-split">
+        <a class="button button-secondary" href="/home.html">Cancel</a>
+        <button class="button button-primary" type="submit">Save changes</button>
+      </div>
+    </form>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

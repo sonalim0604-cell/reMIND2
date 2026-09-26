@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Helping points</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/questionnaire.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/index.html" aria-label="reMIND registration">reMIND</a></header>
+  <main class="page-shell">
+    <section class="content-panel" aria-labelledby="page-title">
+      <nav class="step-navigation" aria-label="Registration progress"><a class="step-back" href="/caretaker.html">Back</a><span class="step-current">Step 3 of 4</span><span>Helping points</span></nav>
+      <h1 id="page-title">What would help each day?</h1>
+      <p class="lead">Choose any that feel useful. You can leave all of them unselected.</p>
+      <form id="topics-form">
+        <div class="topic-grid" id="topic-grid" aria-label="Helping point options"></div>
+        <div class="form-actions form-actions-split">
+          <a class="button button-secondary" href="/caretaker.html">Back</a>
+          <button class="button button-primary" type="submit">Save &amp; next</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

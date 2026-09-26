@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Reminders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/voice-playback.js"></script>
+  <script defer src="/js/reminders.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <div class="section-heading"><div><h1>Reminders</h1><p>One schedule for routines, medicines, and activities.</p></div><button class="button button-primary" id="show-reminder-form" type="button">Add reminder</button></div>
+    <section class="app-section" id="reminder-form-panel" hidden aria-labelledby="add-reminder-heading">
+      <h2 id="add-reminder-heading">New reminder</h2>
+      <form class="field-row" id="reminder-form">
+        <div class="field"><label for="reminder-title">Reminder</label><input id="reminder-title" name="title" required></div>
+        <div class="field"><label for="reminder-time">Time</label><input id="reminder-time" name="time" type="time" required></div>
+        <div class="field"><label for="reminder-period">Time of day</label><select id="reminder-period" name="period"><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="night">Night</option></select></div>
+        <div class="field"><label for="reminder-type">Type</label><select id="reminder-type" name="type"><option value="activity">Activity</option><option value="routine">Routine step</option><option value="medication">Medication</option></select></div>
+        <div class="form-actions"><button class="button button-secondary" id="cancel-reminder" type="button">Cancel</button><button class="button button-primary" type="submit">Save reminder</button></div>
+      </form>
+    </section>
+    <div class="schedule-list" id="reminder-list"></div>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

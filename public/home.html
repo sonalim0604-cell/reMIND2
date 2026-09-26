@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/audio-recorder.js"></script>
+  <script defer src="/js/home.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <section class="app-section">
+      <p class="eyebrow">Your day, your way</p>
+      <h1 id="welcome-heading">Welcome to reMIND</h1>
+      <p class="lead">Choose what feels useful right now.</p>
+      <div class="topic-overview-list" id="helping-points-list" aria-live="polite"></div>
+      <div class="form-actions"><a class="button button-secondary" href="/edit-helping-points.html">Edit helping points</a></div>
+    </section>
+
+    <section class="app-section" id="audio-section" aria-labelledby="audio-heading" hidden>
+      <div class="audio-panel">
+        <span class="audio-symbol" id="audio-symbol" aria-hidden="true"></span>
+        <div class="audio-copy">
+          <h2 id="audio-heading">A familiar voice</h2>
+          <p id="audio-message"></p>
+          <p class="status-text" id="voice-generation-status" aria-live="polite"></p>
+        </div>
+        <button class="button button-primary" id="record-start" type="button">Record</button>
+      </div>
+      <div class="recorder-panel" id="audio-recorder-panel" hidden>
+        <p id="recorder-status" class="status-text" role="status" aria-live="polite">Recording up to two minutes.</p>
+        <progress class="record-progress" id="record-progress" max="120" value="0" aria-label="Recording time"></progress>
+        <div class="recorder-controls">
+          <span id="record-time">0:00 / 2:00</span>
+          <button class="button button-primary" id="record-begin" type="button">Start recording</button>
+          <button class="button button-danger" id="record-stop" type="button" disabled>Stop</button>
+          <button class="button button-secondary" id="record-cancel" type="button">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <nav class="app-section" aria-label="reMIND screens">
+      <div class="section-heading"><h2>Your tools</h2></div>
+      <div class="app-link-grid">
+        <a class="app-link" href="/daily.html" data-icon="clockCalendar">Daily routine</a>
+        <a class="app-link" href="/activities.html" data-icon="exercise">Activities</a>
+        <a class="app-link" href="/reminders.html" data-icon="checklist">Reminders</a>
+        <a class="app-link" href="/safety.html" data-icon="person">Safety</a>
+        <a class="app-link" href="/family.html" data-icon="person">Family access</a>
+        <a class="app-link" href="/dashboard.html" data-icon="learning">Caregiver dashboard</a>
+        <a class="app-link" href="/clinician.html" data-icon="learning">Clinician view</a>
+        <a class="app-link" href="/settings.html" data-icon="checklist">Settings</a>
+      </div>
+    </nav>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

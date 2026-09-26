@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Caregiver dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/trainer-engine.js"></script>
+  <script defer src="/js/dashboard.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <div class="section-heading"><div><h1>Caregiver dashboard</h1><p>A shared view of routine practice and helping points.</p></div><button class="button button-primary" id="export-dashboard" type="button">Export report</button></div>
+    <section class="app-section" aria-label="Routine summary">
+      <dl class="stat-grid">
+        <div class="stat-card"><dt>Sessions this week</dt><dd id="sessions-this-week">0</dd></div>
+        <div class="stat-card"><dt>Longest recall interval</dt><dd id="longest-interval">1 day</dd></div>
+        <div class="stat-card"><dt>Current streak</dt><dd id="current-streak">0</dd></div>
+      </dl>
+    </section>
+    <section class="app-section" aria-labelledby="prompts-heading">
+      <div class="section-heading"><h2 id="prompts-heading">Prompts needed this week</h2></div>
+      <div class="prompt-chart" id="prompts-chart"></div>
+    </section>
+    <section class="app-section" aria-labelledby="cue-level-heading">
+      <div class="section-heading"><h2 id="cue-level-heading">Cue level by time of day</h2></div>
+      <div class="cue-list" id="cue-level-list"></div>
+    </section>
+    <section class="app-section" aria-labelledby="dashboard-medication-heading">
+      <div class="section-heading"><h2 id="dashboard-medication-heading">Medication</h2></div>
+      <div id="dashboard-medication"></div>
+    </section>
+    <section class="app-section" aria-labelledby="meals-heading">
+      <div class="section-heading"><h2 id="meals-heading">Meals and activity</h2></div>
+      <div id="dashboard-activities"></div>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Clinician view</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/clinician.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <div class="section-heading"><div><h1>Clinician view</h1><p>Adjust recall practice parameters for this care plan.</p></div><button class="button button-secondary" id="export-clinician" type="button">Export report</button></div>
+    <form class="app-section form-stack" id="engine-parameters-form">
+      <div class="field-row">
+        <div class="field"><label for="start-interval">Starting recall interval (days)</label><input id="start-interval" type="number" min="1" max="30" step="1" value="1" required></div>
+        <div class="field"><label for="interval-multiplier">Interval multiplier</label><input id="interval-multiplier" type="number" min="1.2" max="4" step="0.1" value="2" required></div>
+      </div>
+      <div class="field"><label for="cue-fade-sessions">Consecutive target-interval sessions before fading a cue</label><input id="cue-fade-sessions" type="number" min="1" max="10" value="2" required></div>
+      <div class="engine-summary" id="engine-summary"></div>
+      <div class="form-actions"><button class="button button-primary" type="submit">Save parameters</button></div>
+    </form>
+    <section class="app-section" aria-labelledby="outcomes-heading">
+      <div class="section-heading"><h2 id="outcomes-heading">Suggested outcome scales</h2></div>
+      <ul><li>Everyday task completion and level of assistance</li><li>Caregiver-rated confidence and burden</li><li>Routine participation and wellbeing</li><li>Medication adherence, confirmed by a caregiver</li></ul>
+      <p class="privacy-note">These suggestions are not a diagnosis or a substitute for clinical judgement.</p>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

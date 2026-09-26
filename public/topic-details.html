@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Topic details</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/topic-details.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/index.html" aria-label="reMIND registration">reMIND</a></header>
+  <main class="page-shell">
+    <section class="content-panel" aria-labelledby="page-title">
+      <nav class="step-navigation" aria-label="Registration progress"><a class="step-back" href="/questionnaire.html">Back</a><span class="step-current">Step 4 of 4</span><span>Topic details</span></nav>
+      <h1 id="page-title">Make it personal</h1>
+      <p class="lead">Add a little detail to the reminders you chose. Every note is optional.</p>
+      <form id="topic-details-form">
+        <div class="topic-note-list" id="topic-note-list"></div>
+        <div class="form-actions form-actions-split">
+          <a class="button button-secondary" href="/questionnaire.html">Back</a>
+          <button class="button button-primary" id="finish-registration" type="submit">Complete registration</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

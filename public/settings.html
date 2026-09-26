@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/settings.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <h1>Settings</h1>
+    <p class="lead">Adjust the app's language, display, and cue preferences.</p>
+    <form class="app-section form-stack" id="settings-form">
+      <div class="field"><label for="language-setting">Language</label><select id="language-setting"><option value="en">English</option><option value="hi">Hindi</option><option value="regional">Regional language (coming later)</option></select></div>
+      <div class="field"><label for="text-size-setting">Text size</label><div class="range-control"><input id="text-size-setting" type="range" min="18" max="24" step="3" value="18"><output id="text-size-output" for="text-size-setting">18px</output></div></div>
+      <div class="field"><label for="volume-setting">Cue volume</label><div class="range-control"><input id="volume-setting" type="range" min="0" max="100" step="5" value="70"><output id="volume-output" for="volume-setting">70%</output></div></div>
+      <label class="switch-control" for="vibration-setting"><input id="vibration-setting" type="checkbox"><span>Vibrate for reminders when supported</span></label>
+      <div class="field"><label for="cue-override">Manual cue-level override</label><select id="cue-override"><option value="automatic">Follow recall practice</option><option value="0">Full cue</option><option value="1">Photo only</option><option value="2">Short prompt</option><option value="3">No cue</option></select></div>
+      <div class="form-actions"><button class="button button-primary" type="submit">Save settings</button></div>
+    </form>
+    <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+  </main>
+</body>
+</html>

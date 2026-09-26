@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Family access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/family.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <div class="section-heading"><div><h1>Family access</h1><p>People connected to this care plan and the updates they receive.</p></div><button class="button button-primary" id="show-family-form" type="button">Add person</button></div>
+    <section class="app-section" id="family-form-panel" hidden aria-labelledby="add-person-heading">
+      <h2 id="add-person-heading">Add a care contact</h2>
+      <form class="field-row" id="family-form">
+        <div class="field"><label for="family-name">Name</label><input id="family-name" required></div>
+        <div class="field"><label for="family-role">Role</label><input id="family-role" placeholder="For example, son or neighbour" required></div>
+        <div class="field"><label for="family-access">Access level</label><select id="family-access"><option>Care updates</option><option>Full care access</option><option>Emergency contact</option></select></div>
+        <div class="form-actions"><button class="button button-secondary" id="cancel-family" type="button">Cancel</button><button class="button button-primary" type="submit">Add to care</button></div>
+      </form>
+    </section>
+    <section class="app-section" aria-labelledby="connected-heading">
+      <div class="section-heading"><h2 id="connected-heading">Connected to care</h2></div>
+      <div class="family-list" id="family-list"></div>
+    </section>
+    <section class="app-section" aria-labelledby="notification-heading">
+      <div class="section-heading"><h2 id="notification-heading">Notification preferences</h2></div>
+      <div class="preference-list" id="notification-preferences"></div>
+      <p class="escalation-note">If an alert is not acknowledged within 15 minutes, it passes to the next family member in the contact order.</p>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

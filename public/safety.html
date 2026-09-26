@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Safety</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/geofence-map.js"></script>
+  <script defer src="/js/safety.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
+    <h1>Safety</h1>
+    <p class="lead">Phone-based safe-zone tools. This build uses the phone's GPS and has no wearable hardware.</p>
+    <section class="app-section" aria-labelledby="safe-zone-heading">
+      <div class="section-heading"><h2 id="safe-zone-heading">Safe zone</h2></div>
+      <div class="map-placeholder" id="map-placeholder" role="region" aria-label="Home and current location map">
+        <div class="map-fallback-content"><p>Set a home location to view the safe zone.</p></div>
+      </div>
+      <form class="field-row home-location-form" id="home-location-form">
+        <div class="field"><label for="home-latitude">Home latitude</label><input id="home-latitude" name="latitude" type="number" min="-90" max="90" step="any" required></div>
+        <div class="field"><label for="home-longitude">Home longitude</label><input id="home-longitude" name="longitude" type="number" min="-180" max="180" step="any" required></div>
+        <div class="form-actions"><button class="button button-secondary" id="use-current-home" type="button">Use current location</button><button class="button button-primary" type="submit">Save home location</button></div>
+      </form>
+      <div class="field-row">
+        <div class="field"><label for="safe-zone-radius">Safe-zone radius (metres)</label><input id="safe-zone-radius" type="number" min="50" max="5000" step="50" value="250"></div>
+        <div class="form-actions"><button class="button button-secondary" id="locate-phone" type="button">Start location monitoring</button></div>
+      </div>
+      <p class="status-text" id="location-status" role="status" aria-live="polite"></p>
+      <div class="safety-alert-banner" id="safety-alert-banner" role="alert" hidden></div>
+      <button class="button sos-button" id="sos-button" type="button">SOS - Get help</button>
+      <p class="privacy-note">Location sharing should be consensual and limited to the least-restrictive tracking needed for safety. Tracking works only while this browser tab stays open; background tracking in a production app would require a native mobile app.</p>
+    </section>
+    <section class="app-section" aria-labelledby="alerts-heading">
+      <div class="section-heading"><h2 id="alerts-heading">Recent alerts</h2></div>
+      <div class="schedule-list" id="alert-list"></div>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>
