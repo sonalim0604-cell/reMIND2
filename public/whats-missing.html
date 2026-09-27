@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | What's missing?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/whats-missing.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/activities.html">Back to Activities</a></nav>
+    <h1>What's missing?</h1>
+    <p class="lead">Take a look at the objects, then choose the one you remember.</p>
+    <section class="app-section">
+      <div id="object-row" class="activity-grid" aria-label="Everyday objects"></div>
+      <p id="question" aria-live="polite">Take a moment to look.</p>
+      <div id="answer-options" class="activity-grid" aria-label="Answer choices"></div>
+      <p id="game-message" role="status" aria-live="polite"></p>
+      <button class="button button-secondary" id="play-again" type="button" hidden>Play again</button>
+    </section>
+  </main>
+</body>
+</html>

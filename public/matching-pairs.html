@@ -4,25 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#4f8fd1">
-  <title>reMIND | Activities</title>
+  <title>reMIND | Matching pairs</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <script defer src="/js/shared.js"></script>
-  <script defer src="/js/activities.js"></script>
+  <script defer src="/js/matching-pairs.js"></script>
 </head>
 <body>
   <header class="site-header" data-app-header></header>
   <main class="page-shell app-shell">
-    <nav class="screen-nav" aria-label="Page navigation"><a href="/home.html">Home</a></nav>
-    <h1>Activities</h1>
-    <p class="lead">Short, familiar activities to enjoy together. Take a break whenever it feels right.</p>
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/activities.html">Back to Activities</a></nav>
+    <h1>Matching pairs</h1>
+    <p class="lead">Turn over two cards at a time and see what you find.</p>
     <section class="app-section">
-      <div class="activity-grid" id="activity-grid"></div>
-      <p class="privacy-note">Reminiscence activities use generic illustrations only, never personal photos.</p>
+      <p id="pairs-count" aria-live="polite">Pairs found: 0 of 5</p>
+      <div id="pair-grid" class="activity-grid" aria-label="Matching cards"></div>
+      <p id="game-message" role="status" aria-live="polite"></p>
+      <button class="button button-secondary" id="new-game" type="button">New game</button>
     </section>
   </main>
-  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
 </body>
 </html>

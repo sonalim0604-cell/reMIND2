@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Routine sequencing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/routine-data.js"></script>
+  <script defer src="/js/routine-sequencing.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/activities.html">Back to Activities</a></nav>
+    <h1>Routine sequencing</h1>
+    <p class="lead">Choose a familiar routine, then place its steps in order. Hints are here whenever they help.</p>
+    <section class="app-section">
+      <h2>Choose a routine</h2>
+      <div id="routine-picker" class="activity-grid" aria-label="Available routines"></div>
+      <div id="routine-activity" hidden>
+        <h2 id="selected-routine-title"></h2>
+        <p>Choose the next step in the routine.</p>
+        <div id="step-cards" class="activity-grid" aria-label="Routine steps"></div>
+        <h2>Your order</h2>
+        <ol id="your-order" aria-live="polite"></ol>
+        <p id="routine-message" role="status" aria-live="polite"></p>
+        <button class="button button-secondary" id="try-again" type="button">Try this routine again</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

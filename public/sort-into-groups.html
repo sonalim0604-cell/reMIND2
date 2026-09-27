@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Sort into groups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/sort-data.js"></script>
+  <script defer src="/js/sort-into-groups.js"></script>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/activities.html">Back to Activities</a></nav>
+    <h1>Sort into groups</h1>
+    <p class="lead">Choose a difficulty and round, then place each item in a group.</p>
+    <section class="app-section">
+      <h2>Choose a level</h2>
+      <div class="difficulty-switcher" role="group" aria-label="Sorting difficulty">
+        <button class="button button-secondary" type="button" data-level="easy" aria-pressed="true">Easy</button>
+        <button class="button button-secondary" type="button" data-level="medium" aria-pressed="false">Medium</button>
+        <button class="button button-secondary" type="button" data-level="hard" aria-pressed="false">Hard</button>
+      </div>
+      <h2>Choose a round</h2>
+      <div id="round-picker" class="activity-grid" aria-label="Available rounds"></div>
+      <div id="sort-round" hidden>
+        <h2 id="round-title"></h2>
+        <p id="round-instruction"></p>
+        <div id="group-zones" class="activity-grid" aria-label="Groups"></div>
+        <h2>Items</h2>
+        <div id="items" class="activity-grid" aria-label="Items to sort"></div>
+        <p id="sort-message" role="status" aria-live="polite"></p>
+        <button class="button button-secondary" id="next-round" type="button">Next round</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

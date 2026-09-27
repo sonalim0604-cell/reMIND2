@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Rhythm tap-along</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/rhythm-tap-along.js"></script>
+  <style>
+    .rhythm-pulse {
+      width: 9rem;
+      height: 9rem;
+      margin: 2rem auto;
+      border-radius: 50%;
+      background: var(--cat-music-bg);
+      transition: background-color .15s;
+    }
+    .rhythm-pulse.playing { animation: rhythm-pulse 1.2s ease-in-out infinite; }
+    .rhythm-pulse.tapped { background: var(--cat-music-icon); }
+    .rhythm-pulse.tap-response {
+      background: var(--cat-music-icon);
+      outline: 8px solid var(--cat-music-bg);
+      outline-offset: 5px;
+    }
+    @keyframes rhythm-pulse {
+      50% { transform: scale(.72); opacity: .65; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rhythm-pulse.playing { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/activities.html">Back to Activities</a></nav>
+    <h1>Rhythm tap-along</h1>
+    <p class="lead">Follow the gentle pulse, or simply enjoy listening and watching.</p>
+    <section class="app-section">
+      <div id="pulse" class="rhythm-pulse" aria-hidden="true"></div>
+      <div class="activity-controls">
+        <button class="button button-secondary" id="start-stop" type="button">Start</button>
+        <button class="button button-secondary" id="tempo-toggle" type="button" aria-pressed="false">Tempo: Slow</button>
+        <button class="button" id="tap-button" type="button" disabled>Tap</button>
+      </div>
+      <p id="rhythm-message" role="status" aria-live="polite">Choose Start when you're ready.</p>
+    </section>
+  </main>
+</body>
+</html>

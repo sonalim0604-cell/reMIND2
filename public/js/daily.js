@@ -28,6 +28,23 @@
     return button;
   }
 
+  function visualForStep(step) {
+    const title = step.title.toLowerCase();
+    if (title.includes('medication') || title.includes('medicine') || step.icon === 'pill') {
+      return { icon: 'pill', category: 'medication' };
+    }
+    if (title.includes('breakfast') || title.includes('lunch') || title.includes('meal')) {
+      return { icon: 'plate', category: 'kitchen' };
+    }
+    if (title.includes('walk') || title.includes('movement') || title.includes('exercise') || step.icon === 'exercise') {
+      return { icon: 'exercise', category: 'exercise' };
+    }
+    if (title.includes('activity') || title.includes('song') || step.icon === 'music') {
+      return { icon: 'music', category: 'music' };
+    }
+    return { icon: step.icon, category: 'schedule' };
+  }
+
   function render() {
     const steps = window.ReMindTrainer.getRoutine(activePeriod);
     const stepIndex = Math.min(stepsByPeriod[activePeriod] || 0, steps.length);
@@ -56,7 +73,7 @@
 
     if (stepIndex >= steps.length) {
       document.getElementById('step-counter').textContent = 'Routine complete';
-      photoIcon.innerHTML = window.ReMind.icons.learning();
+      photoIcon.innerHTML = window.ReMind.renderCategoryIcon('learning', 'schedule');
       question.hidden = false;
       const finished = document.createElement('p');
       finished.className = 'answer-feedback';
@@ -77,7 +94,9 @@
     document.getElementById('step-counter').textContent = `${activePeriod[0].toUpperCase()}${activePeriod.slice(1)} · Step ${stepIndex + 1} of ${steps.length}`;
     const override = audioPreferences.cueLevelOverride;
     const cueLevel = override === 'automatic' || override == null ? engineState.cueLevel : Number(override);
-    photoIcon.innerHTML = window.ReMind.icons[step.icon]();
+    const visual = visualForStep(step);
+    photoIcon.innerHTML = window.ReMind.renderCategoryIcon(visual.icon, visual.category);
+    photoIcon.dataset.category = visual.category;
     question.hidden = false;
     feedback.textContent = '';
     document.getElementById('trainer-status').textContent = `${window.ReMindTrainer.cueLevels[cueLevel]} · Recall interval: ${engineState.intervalDays} day${engineState.intervalDays === 1 ? '' : 's'} · Streak: ${engineState.streak}`;

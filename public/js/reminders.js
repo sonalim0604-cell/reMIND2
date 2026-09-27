@@ -31,6 +31,19 @@
     return 'daily_reminder_1';
   }
 
+  function visualForReminder(reminder) {
+    const title = reminder.title.toLowerCase();
+    if (reminder.type === 'medication') return { icon: 'pill', category: 'medication' };
+    if (title.includes('breakfast') || title.includes('lunch') || title.includes('meal')) {
+      return { icon: 'plate', category: 'kitchen' };
+    }
+    if (reminder.type === 'activity' || title.includes('walk') || title.includes('movement')) {
+      return { icon: 'exercise', category: 'exercise' };
+    }
+    if (title.includes('music') || title.includes('song')) return { icon: 'music', category: 'music' };
+    return { icon: 'clockCalendar', category: 'schedule' };
+  }
+
   function render() {
     list.replaceChildren();
     periods.forEach((period) => {
@@ -43,6 +56,9 @@
       reminders.filter((reminder) => reminder.period === period).forEach((reminder) => {
         const card = document.createElement('article');
         card.className = 'schedule-card';
+        const visual = visualForReminder(reminder);
+        const typeIcon = document.createElement('span');
+        typeIcon.innerHTML = window.ReMind.renderCategoryIcon(visual.icon, visual.category);
         const details = document.createElement('div');
         const title = document.createElement('h3');
         title.textContent = reminder.title;
@@ -76,7 +92,7 @@
         toggleText.textContent = toggle.checked ? 'On' : 'Off';
         toggle.addEventListener('change', () => { toggleText.textContent = toggle.checked ? 'On' : 'Off'; });
         toggleLabel.append(toggle, toggleText);
-        card.append(details, preview, toggleLabel);
+        card.append(typeIcon, details, preview, toggleLabel);
         cards.append(card);
       });
       if (!cards.childElementCount) {

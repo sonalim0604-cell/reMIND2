@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f8fd1">
+  <title>reMIND | Then &amp; now</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/shared.js"></script>
+  <script defer src="/js/then-and-now.js"></script>
+  <style>
+    #prompt-image { display: grid; min-height: 9rem; place-items: center; }
+    #prompt-image img { display: block; width: min(100%, 16rem); max-height: 12rem; height: auto; object-fit: contain; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <header class="site-header" data-app-header></header>
+  <main class="page-shell app-shell">
+    <nav class="screen-nav" aria-label="Page navigation"><a href="/activities.html">Back to Activities</a></nav>
+    <h1>Then &amp; now</h1>
+    <p class="lead">Generic objects can be a gentle starting point for a conversation.</p>
+    <section class="app-section">
+      <article class="activity-card" aria-live="polite">
+        <h2 id="prompt-title"></h2>
+        <div id="prompt-image"></div>
+        <p id="prompt-text"></p>
+        <p id="prompt-position"></p>
+      </article>
+      <div class="activity-controls">
+        <button class="button button-secondary" id="previous-prompt" type="button">Back</button>
+        <button class="button" id="next-prompt" type="button">Next</button>
+      </div>
+      <p class="privacy-note">These are generic illustrations, not personal or family photos.</p>
+    </section>
+  </main>
+</body>
+</html>
