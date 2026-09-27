@@ -10,6 +10,7 @@ const reminderPhrases = require('./data/reminderPhrases');
 const routinesStore = require('./lib/routinesStore');
 
 const app = express();
+app.set('trust proxy', 1);
 const port = Number(process.env.PORT) || 3000;
 const sessionSecret = process.env.SESSION_SECRET || 'reMIND-local-development-secret';
 const sessionCookieName = 'remind.sid';
@@ -140,6 +141,7 @@ function validateRoutine(body, id) {
   return { routine: { id: id || (typeof body.id === 'string' ? body.id : undefined), slot: body.slot, name, steps } };
 }
 
+console.log('Server starting, registering routes...');
 app.get('/api/routines', persistRoutineSession, (req, res) => {
   try {
     res.json(routinesStore.getRoutines(req.sessionID));
@@ -147,6 +149,7 @@ app.get('/api/routines', persistRoutineSession, (req, res) => {
     res.status(500).json({ error: 'Unable to load routines.' });
   }
 });
+console.log('Routines route registered');
 
 app.get('/api/routines/training', persistRoutineSession, (req, res) => {
   try {
@@ -495,5 +498,8 @@ app.post('/api/sign-out', (req, res) => {
 });
 
 app.listen(port, () => {
+  console.log('Registered routes:', app._router.stack
+    .filter(layer => layer.route)
+    .map(layer => layer.route.path));
   console.log(`reMIND is listening on http://localhost:${port}`);
 });

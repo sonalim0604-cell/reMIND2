@@ -172,14 +172,28 @@
   }
 
   async function request(url, options = {}) {
-    const response = await fetch(url, {
-      credentials: 'same-origin',
-      headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}) },
-      ...options
-    });
+    let response;
+    try {
+      response = await fetch(url, {
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}) },
+        ...options
+      });
+    } catch (error) {
+      console.error('Routine request failed before receiving a response.', { url, error });
+      throw new Error(`Unable to reach the routine service: ${error.message}`);
+    }
     if (!response.ok) {
-      const result = await response.json().catch(() => ({}));
-      throw new Error(result.error || 'Unable to complete the routine request.');
+      const rawBody = await response.text().catch(() => '');
+      let body = rawBody;
+      try { body = JSON.parse(rawBody); } catch { /* Keep the unparsed response text for diagnostics. */ }
+      console.error('Routine request returned an error response.', {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+        body
+      });
+      throw new Error(body?.error || `Routine request failed with HTTP ${response.status}.`);
     }
     return response.status === 204 ? null : response.json();
   }
