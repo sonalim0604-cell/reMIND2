@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const { cloneVoice, generateSpeech } = require('./lib/elevenLabsService');
 const reminderPhrases = require('./data/reminderPhrases');
+const routinesStore = require('./lib/routinesStore');
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -63,11 +64,28 @@ const phraseUpload = multer({
   }
 }).single('audio');
 
+const stepCueUpload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, callback) => {
+      const destination = path.dirname(routinesStore.stepCuePath(req.sessionID, req.params.stepId));
+      fs.mkdirSync(destination, { recursive: true });
+      callback(null, destination);
+    },
+    filename: (req, file, callback) => callback(null, `${req.params.stepId}.mp3`)
+  }),
+  limits: { fileSize: 5 * 1024 * 1024, files: 1 },
+  fileFilter: (req, file, callback) => {
+    if (!file.mimetype.toLowerCase().startsWith('audio/')) return callback(new Error('Please record an audio cue.'));
+    callback(null, true);
+  }
+}).single('audio');
+
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 app.use(session({
   name: sessionCookieName,
   secret: sessionSecret,
+  store: new routinesStore.PersistentSessionStore(),
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -79,6 +97,111 @@ app.use(session({
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+const routineSlots = new Set(['morning', 'afternoon', 'evening', 'night']);
+const routineIcons = new Set([
+  'clockCalendar', 'calendar', 'pill', 'checklist', 'exercise', 'music', 'musicalNote',
+  'learning', 'person', 'speaker', 'cup', 'spoon', 'plate', 'key', 'glasses', 'umbrella',
+  'book', 'shirt', 'hat', 'sock', 'oldRadio', 'rotaryTelephone', 'recordPlayer',
+  'filmCamera', 'sewingMachine', 'traditionalLamp', 'lightbulb'
+]);
+
+function persistRoutineSession(req, res, next) {
+  if (req.session.routinesSessionInitialized) return next();
+  req.session.routinesSessionInitialized = true;
+  req.session.save((error) => {
+    if (error) return res.status(500).json({ error: 'Unable to initialize your routine session.' });
+    next();
+  });
+}
+
+function validateRoutine(body, id) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return { error: 'Routine data is required.' };
+  if (!routineSlots.has(body.slot)) return { error: 'Choose a valid time-of-day slot.' };
+  const name = typeof body.name === 'string' ? body.name.trim() : '';
+  if (!name || name.length > 100) return { error: 'Routine name must be between 1 and 100 characters.' };
+  if (!Array.isArray(body.steps) || body.steps.length > 200) return { error: 'Routine steps must be a list of 200 items or fewer.' };
+  if (!body.steps.length) return { error: 'Add at least one step to the routine.' };
+
+  const usedIds = new Set();
+  const steps = [];
+  for (const step of body.steps) {
+    if (!step || typeof step !== 'object' || Array.isArray(step)) return { error: 'Each routine step must be an object.' };
+    const label = typeof step.label === 'string' ? step.label.trim() : '';
+    const cuePhrase = typeof step.cuePhrase === 'string' ? step.cuePhrase.trim() : '';
+    if (!label || label.length > 120 || cuePhrase.length > 300) return { error: 'Step labels must be 1-120 characters and cue phrases 300 characters or fewer.' };
+    if (!routineIcons.has(step.icon)) return { error: 'Choose an icon from the available app icons.' };
+    const stepId = typeof step.id === 'string' && /^[A-Za-z0-9_-]{1,100}$/.test(step.id) ? step.id : require('crypto').randomUUID();
+    if (usedIds.has(stepId)) return { error: 'Each step needs a unique ID.' };
+    usedIds.add(stepId);
+    steps.push({ id: stepId, label, icon: step.icon, cuePhrase });
+  }
+
+  return { routine: { id: id || (typeof body.id === 'string' ? body.id : undefined), slot: body.slot, name, steps } };
+}
+
+app.get('/api/routines', persistRoutineSession, (req, res) => {
+  try {
+    res.json(routinesStore.getRoutines(req.sessionID));
+  } catch {
+    res.status(500).json({ error: 'Unable to load routines.' });
+  }
+});
+
+app.get('/api/routines/training', persistRoutineSession, (req, res) => {
+  try {
+    res.json(routinesStore.getTrainingData(req.sessionID));
+  } catch {
+    res.status(500).json({ error: 'Unable to load routine training progress.' });
+  }
+});
+
+app.post('/api/routines', persistRoutineSession, (req, res) => {
+  const result = validateRoutine(req.body);
+  if (result.error) return res.status(400).json({ error: result.error });
+  try {
+    const routine = routinesStore.saveRoutine(req.sessionID, result.routine);
+    res.status(201).json(routine);
+  } catch {
+    res.status(500).json({ error: 'Unable to save this routine.' });
+  }
+});
+
+app.put('/api/routines/:id', persistRoutineSession, (req, res) => {
+  const existing = routinesStore.getRoutines(req.sessionID).find(routine => routine.id === req.params.id);
+  if (!existing) return res.status(404).json({ error: 'Routine not found.' });
+  const result = validateRoutine(req.body, req.params.id);
+  if (result.error) return res.status(400).json({ error: result.error });
+  try {
+    routinesStore.saveRoutine(req.sessionID, result.routine);
+    const ordered = routinesStore.reorderSteps(req.sessionID, req.params.id, result.routine.steps.map(step => step.id));
+    res.json(ordered);
+  } catch {
+    res.status(500).json({ error: 'Unable to update this routine.' });
+  }
+});
+
+app.delete('/api/routines/:id', persistRoutineSession, (req, res) => {
+  try {
+    if (!routinesStore.deleteRoutine(req.sessionID, req.params.id)) return res.status(404).json({ error: 'Routine not found.' });
+    res.status(204).end();
+  } catch {
+    res.status(500).json({ error: 'Unable to delete this routine.' });
+  }
+});
+
+app.get('/api/routines/:routineId/steps/:stepId/state', persistRoutineSession, (req, res) => {
+  const routine = routinesStore.getRoutines(req.sessionID).find(item => item.id === req.params.routineId);
+  if (!routine || !routine.steps.some(step => step.id === req.params.stepId)) return res.status(404).json({ error: 'Routine step not found.' });
+  res.json(routinesStore.getStepState(req.sessionID, req.params.stepId));
+});
+
+app.post('/api/routines/:routineId/steps/:stepId/answer', persistRoutineSession, (req, res) => {
+  const routine = routinesStore.getRoutines(req.sessionID).find(item => item.id === req.params.routineId);
+  if (!routine || !routine.steps.some(step => step.id === req.params.stepId)) return res.status(404).json({ error: 'Routine step not found.' });
+  if (typeof req.body?.correct !== 'boolean') return res.status(400).json({ error: 'Answer result must be true or false.' });
+  res.json(routinesStore.recordStepAnswer(req.sessionID, req.params.stepId, req.body.correct, req.body.parameters));
+});
 
 app.get('/api/session', (req, res) => {
   const registration = req.session.registration || {};
@@ -93,6 +216,32 @@ app.get('/api/session', (req, res) => {
       exists: Boolean(audioRecording.filename),
       filename: audioRecording.filename || null
     }
+  });
+});
+
+app.post('/api/reminders/:id/confirm', (req, res) => {
+  const registration = req.session.registration || {};
+  let userReminders = Array.isArray(registration.userReminders) ? [...registration.userReminders] : [];
+  if (!userReminders.length && req.params.id === 'medication-default') {
+    userReminders = [{
+      id: 'medication-default',
+      title: registration.topicNotes?.['medication-reminder'] || 'Medication reminder',
+      time: '15:00',
+      period: 'afternoon',
+      type: 'medication',
+      enabled: true
+    }];
+  }
+  const index = userReminders.findIndex(reminder => reminder.id === req.params.id && reminder.type === 'medication');
+  if (index < 0) return res.status(404).json({ error: 'This medication reminder is no longer available.' });
+
+  const date = new Date();
+  const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  userReminders[index] = { ...userReminders[index], lastConfirmedDate: dateKey, lastConfirmedAt: date.toISOString() };
+  req.session.registration = { ...registration, userReminders };
+  req.session.save(error => {
+    if (error) return res.status(500).json({ error: 'The medication confirmation could not be saved.' });
+    res.json({ reminder: userReminders[index] });
   });
 });
 
@@ -178,6 +327,22 @@ app.post('/api/audio/upload', (req, res) => {
   });
 });
 
+app.post('/api/audio/step-cue/:stepId', (req, res, next) => {
+  if (!/^[A-Za-z0-9_-]{1,100}$/.test(req.params.stepId)) return res.status(400).json({ error: 'Invalid routine step ID.' });
+  if (!routinesStore.findStep(req.sessionID, req.params.stepId)) return res.status(404).json({ error: 'Routine step not found.' });
+  stepCueUpload(req, res, error => {
+    if (error) return res.status(400).json({ error: error.message || 'Unable to save this cue recording.' });
+    if (!req.file) return res.status(400).json({ error: 'Record a short cue before saving.' });
+    try {
+      routinesStore.markStepRecording(req.sessionID, req.params.stepId, req.file.mimetype);
+      res.status(201).json({ stepId: req.params.stepId, personalRecording: true, mimeType: req.file.mimetype });
+    } catch {
+      fs.rmSync(req.file.path, { force: true });
+      res.status(500).json({ error: 'Unable to save this cue recording.' });
+    }
+  });
+});
+
 app.post('/api/voice/clone-and-generate', async (req, res) => {
   const recording = req.session.registration?.audioRecording;
   if (!recording?.filename) {
@@ -235,11 +400,41 @@ app.post('/api/voice/clone-and-generate', async (req, res) => {
   }
 });
 
-app.get('/api/voice/phrase/:key', (req, res) => {
+app.get('/api/voice/phrase/:key', async (req, res) => {
   const { key } = req.params;
-  if (!Object.hasOwn(reminderPhrases, key)) return res.status(404).json({ error: 'Phrase not found.' });
+  const ownedStep = routinesStore.findStep(req.sessionID, key);
+  if (ownedStep) {
+    const { step } = ownedStep;
+    const personalPath = routinesStore.stepCuePath(req.sessionID, step.id);
+    if (step.personalRecording && fs.existsSync(personalPath)) {
+      res.type(step.personalRecordingMimeType || 'audio/webm');
+      return res.sendFile(personalPath);
+    }
+
+    const voiceReady = req.session.registration?.audioConsent === true
+      && req.session.voiceGeneration?.status === 'ready'
+      && req.session.voiceId;
+    if (step.cuePhrase && voiceReady) {
+      const ttsDirectory = path.join(audioCacheDirectory, req.sessionID, 'step-phrases');
+      const ttsPath = path.join(ttsDirectory, `${step.id}.mp3`);
+      try {
+        if (!fs.existsSync(ttsPath)) {
+          const audio = await generateSpeech(step.cuePhrase, req.session.voiceId);
+          fs.mkdirSync(ttsDirectory, { recursive: true });
+          fs.writeFileSync(ttsPath, audio);
+        }
+        res.type('audio/mpeg');
+        return res.sendFile(ttsPath);
+      } catch {
+        return res.status(503).json({ error: 'Voice cue is not available yet.' });
+      }
+    }
+    return res.status(404).json({ error: 'Voice cue is not available yet.' });
+  }
+
+  if (!Object.hasOwn(reminderPhrases, key)) return res.status(404).json({ error: 'Voice cue is not available yet.' });
   const audioPath = path.join(audioCacheDirectory, req.sessionID, `${key}.mp3`);
-  if (!fs.existsSync(audioPath)) return res.status(404).json({ error: 'No audio is cached for this phrase yet.', text: reminderPhrases[key] });
+  if (!fs.existsSync(audioPath)) return res.status(404).json({ error: 'Voice cue is not available yet.' });
   res.type('audio/mpeg').sendFile(audioPath);
 });
 

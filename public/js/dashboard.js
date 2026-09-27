@@ -45,34 +45,74 @@
     container.append(p);
   }
 
+  async function fetchRoutineTraining() {
+    const response = await fetch('/api/routines/training', {
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin'
+    });
+    const data = await response.json().catch(() => []);
+    if (!response.ok) throw new Error('Could not load routine training progress.');
+    return data;
+  }
+
+  function renderCueLevels(routineData) {
+    const slots = [
+      { id: 'morning', label: 'Morning' },
+      { id: 'afternoon', label: 'Afternoon' },
+      { id: 'evening', label: 'Evening' },
+      { id: 'night', label: 'Night' }
+    ];
+    cueList.replaceChildren();
+    slots.forEach(slot => {
+      const group = document.createElement('section');
+      group.className = 'dashboard-routine-group';
+      const heading = document.createElement('h3');
+      heading.textContent = slot.label;
+      group.append(heading);
+      const matchingRoutines = routineData.filter(routine => routine.slot === slot.id);
+      if (!matchingRoutines.length) {
+        appendText(group, 'No routine set up yet.');
+      }
+      matchingRoutines.forEach(routine => {
+        const routineHeading = document.createElement('h4');
+        routineHeading.textContent = routine.name;
+        group.append(routineHeading);
+        routine.steps.forEach(step => {
+          const row = document.createElement('article');
+          row.className = 'family-card dashboard-step-cue';
+          const stepName = document.createElement('h4');
+          stepName.textContent = step.label;
+          const state = step.training;
+          const value = document.createElement('p');
+          value.textContent = `${state.cueName} · ${state.intervalDays}-day interval · ${state.consecutiveSuccesses} consecutive success${state.consecutiveSuccesses === 1 ? '' : 'es'}`;
+          row.append(stepName, value);
+          group.append(row);
+        });
+      });
+      cueList.append(group);
+    });
+  }
+
   document.getElementById('export-dashboard').addEventListener('click', async () => {
     try {
       const data = await window.ReMind.fetchSession();
       data.trainerSummary = window.ReMindTrainer.getSummary();
+      data.routines = await fetchRoutineTraining();
       window.ReMind.exportJson('remind-care-report.json', data);
     } catch (error) {
       window.ReMind.showToast(error.message);
     }
   });
 
-  window.ReMind.fetchSession().then((data) => {
+  window.ReMind.fetchSession().then(async (data) => {
     if (data.engineParameters) window.ReMindTrainer.setParameters(data.engineParameters);
     const summary = window.ReMindTrainer.getSummary();
+    const routines = await fetchRoutineTraining();
     document.getElementById('sessions-this-week').textContent = String(summary.sessionsThisWeek);
     document.getElementById('longest-interval').textContent = `${summary.longestInterval} day${summary.longestInterval === 1 ? '' : 's'}`;
     document.getElementById('current-streak').textContent = String(summary.streak);
     renderChart(summary.promptsByDay);
-    cueList.replaceChildren();
-    summary.cueLevels.forEach((cue) => {
-      const card = document.createElement('article');
-      card.className = 'family-card';
-      const label = document.createElement('h3');
-      label.textContent = cue.period[0].toUpperCase() + cue.period.slice(1);
-      const value = document.createElement('p');
-      value.textContent = `${cue.cueName} · ${cue.intervalDays}-day interval`;
-      card.append(label, value);
-      cueList.append(card);
-    });
+    renderCueLevels(routines);
 
     const medication = document.getElementById('dashboard-medication');
     const medicationNote = data.topicNotes?.['medication-reminder'];

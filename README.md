@@ -51,6 +51,12 @@ If cloning is not working on demo day, open `phrase-upload.html` and upload a pr
 
 The safety screen uses `navigator.geolocation.watchPosition()` for live browser location updates, so it works for a demo on a real device when location permission is granted and the site is served from a secure context (localhost is also allowed by browsers). Set `GOOGLE_MAPS_API_KEY` in `.env` to enable the embedded Google map and route directions; without it, the screen still shows the distance from home. This is NOT background tracking: the browser tab must remain open and active for location updates. A production version that needs background tracking would require a native mobile app.
 
+## Notification limitations
+
+- **In-tab polling (built):** reMIND checks routine and reminder times while a Home, Daily, or Reminders tab remains open. Browser notifications require permission; an in-app banner is shown as a fallback. Closed tabs cannot run the scheduler.
+- **PWA + Push API (upgrade path):** a service worker and push subscription could deliver notifications while the web app is closed, subject to browser and platform support.
+- **Native app (most reliable):** a mobile app with operating-system local notifications is the most dependable option for reminders that must work in the background.
+
 ## Future auth options (not built)
 
 If stronger sign-in is needed later, Firebase Phone Auth or email OTP through a service such as Resend could be added; neither phone verification nor OTP is built in this app.

@@ -2,26 +2,9 @@
   'use strict';
 
   const storageKey = 'reMIND.trainer.v1';
-  const periods = ['morning', 'afternoon', 'night'];
+  const periods = ['morning', 'afternoon', 'evening', 'night'];
   const cueLevels = ['Full cue', 'Photo only', 'Short prompt', 'No cue'];
   const defaultParameters = { startInterval: 1, multiplier: 2, fadeAfterSessions: 2 };
-  const routines = {
-    morning: [
-      { title: 'Get ready for the day', description: 'Wash, dress, and take your time.', icon: 'clockCalendar', phraseKey: 'daily_reminder_1' },
-      { title: 'Have breakfast', description: 'Sit somewhere comfortable and enjoy breakfast.', icon: 'learning', phraseKey: 'specific_task_prompt_1' },
-      { title: 'Take a short walk', description: 'Move at a comfortable pace, with support if needed.', icon: 'exercise', phraseKey: 'exercise_prompt_1' }
-    ],
-    afternoon: [
-      { title: 'Have lunch', description: 'Enjoy a meal and a drink of water.', icon: 'learning', phraseKey: 'specific_task_prompt_2' },
-      { title: 'Take a rest', description: 'A quiet pause is part of a good routine.', icon: 'clockCalendar', phraseKey: 'daily_reminder_2' },
-      { title: 'Enjoy an activity', description: 'Choose something familiar that feels pleasant.', icon: 'music', phraseKey: 'nostalgic_song_prompt_1' }
-    ],
-    night: [
-      { title: 'Get ready for bed', description: 'Begin the familiar evening routine.', icon: 'clockCalendar', phraseKey: 'daily_reminder_1' },
-      { title: 'Brush your teeth', description: 'Use the usual toothbrush and toothpaste.', icon: 'checklist', phraseKey: 'specific_task_prompt_1' },
-      { title: 'Settle in for the night', description: 'Get comfortable and rest.', icon: 'learning', phraseKey: 'daily_reminder_2' }
-    ]
-  };
   const lastCorrectPositions = {};
 
   function freshState() {
@@ -86,32 +69,6 @@
     };
   }
 
-  function getRoutine(period) {
-    const key = periods.includes(period) ? period : 'morning';
-    return routines[key].map((step) => ({ ...step }));
-  }
-
-  function getAnswerOptions(period, answerIndex) {
-    const key = periods.includes(period) ? period : 'morning';
-    const routine = routines[key];
-    const targetIndex = Math.max(0, Math.min(routine.length - 1, Number(answerIndex) || 0));
-    const options = routine.map((step, index) => ({ step: { ...step }, index }));
-    for (let index = options.length - 1; index > 0; index -= 1) {
-      const swapIndex = Math.floor(Math.random() * (index + 1));
-      [options[index], options[swapIndex]] = [options[swapIndex], options[index]];
-    }
-
-    const positionKey = `${key}:${targetIndex}`;
-    let correctPosition = options.findIndex((option) => option.index === targetIndex);
-    if (options.length > 1 && lastCorrectPositions[positionKey] === correctPosition) {
-      const nextPosition = (correctPosition + 1) % options.length;
-      [options[correctPosition], options[nextPosition]] = [options[nextPosition], options[correctPosition]];
-      correctPosition = nextPosition;
-    }
-    lastCorrectPositions[positionKey] = correctPosition;
-    return options;
-  }
-
   function recordAnswer(period, correct) {
     const key = periods.includes(period) ? period : 'morning';
     const periodState = state.periods[key];
@@ -162,6 +119,29 @@
     return { ...state.parameters };
   }
 
+  async function getStepState(routineId, stepId) {
+    const response = await fetch(`/api/routines/${encodeURIComponent(routineId)}/steps/${encodeURIComponent(stepId)}/state`, {
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin'
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || 'Could not load this step’s training progress.');
+    return result;
+  }
+
+  async function recordStepAnswer(routineId, stepId, correct, period) {
+    const response = await fetch(`/api/routines/${encodeURIComponent(routineId)}/steps/${encodeURIComponent(stepId)}/answer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ correct, parameters: state.parameters })
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || 'Could not save this step’s training progress.');
+    recordAnswer(period, correct);
+    return result;
+  }
+
   function getSummary() {
     const weekStart = Date.now() - 7 * 24 * 60 * 60 * 1000;
     const recentSessions = state.sessionHistory.filter((session) => Date.parse(session.completedAt) >= weekStart);
@@ -181,5 +161,5 @@
     };
   }
 
-  window.ReMindTrainer = Object.freeze({ periods, cueLevels, getState, getRoutine, getAnswerOptions, recordAnswer, completeSession, setParameters, getSummary });
+  window.ReMindTrainer = Object.freeze({ periods, cueLevels, getState, recordAnswer, completeSession, setParameters, getSummary, getStepState, recordStepAnswer });
 })();

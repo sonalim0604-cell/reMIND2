@@ -105,6 +105,17 @@
     return result;
   }
 
+  async function confirmMedicationReminder(reminderId) {
+    const response = await fetch(`/api/reminders/${encodeURIComponent(reminderId)}/confirm`, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin'
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || 'This medication reminder could not be confirmed.');
+    return result.reminder;
+  }
+
   let toastTimer;
   function showToast(message, duration = 3800) {
     const region = document.getElementById('toast-region');
@@ -141,6 +152,7 @@
     navigate,
     fetchSession,
     saveRegistration,
+    confirmMedicationReminder,
     showToast,
     renderAppHeaders,
     applyDisplayPreferences,
